@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config()
+const brands = require('./brands.json');
 
 const app = express()
 const port = process.env.PORT || 7000;
@@ -15,7 +16,10 @@ app.get("/", (req, res) => {
   res.send("running zestoria server : 200 OK!")
 })
 
-
+// Brands response
+app.get("/brands", (req, res) => {
+  res.send(brands)
+})
 
 
 // mongodb driver config
