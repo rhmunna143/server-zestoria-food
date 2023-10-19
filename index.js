@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const brands = require('./brands.json');
 
@@ -58,8 +58,8 @@ async function run() {
     // get brand filtered products
     app.get("/brand/:name", async (req, res) => {
       const brandName = req?.params?.name;
-      const query = {brandName: brandName}
-      
+      const query = { brandName: brandName }
+
       try {
         const selectedProducts = await products.find(query).toArray();
 
@@ -69,6 +69,22 @@ async function run() {
         res.status(500).json({ error: "An error occurred" });
       }
 
+    })
+
+    //get single product
+    app.get("/details/:id", async (req, res) => {
+      const id = req.params.id;
+
+      const query = { _id: new ObjectId(id) };
+
+      try {
+        const product = await products.findOne(query);
+
+        res.send(product)
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred" });
+      }
     })
 
 
