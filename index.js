@@ -40,6 +40,38 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    // db and collections
+    const database = client.db("ZestoriaDB");
+    const products = database.collection("products");
+
+    // post a product document
+    app.post("/products", async (req, res) => {
+      const product = req?.body;
+
+      const result = await products.insertOne(product)
+
+      res.send(result)
+      console.log(`A document was inserted with the _id: ${result.insertedId}`);
+    })
+
+    // get brand filtered products
+    app.get("/brand/:name", async (req, res) => {
+      const brandName = req?.params?.name;
+      const query = {brandName: brandName}
+      
+      try {
+        const selectedProducts = await products.find(query).toArray();
+
+        res.json(selectedProducts);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred" });
+      }
+
+    })
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
