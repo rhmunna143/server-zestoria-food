@@ -98,13 +98,43 @@ async function run() {
     })
 
     // get all cart products
-    app.get("/my-cart", async(req, res) => {
+    app.get("/my-cart", async (req, res) => {
       const cursor = cart.find();
 
       const result = await cursor.toArray();
 
       res.send(result)
     })
+
+    // delete single cart product
+    // app.delete("/my-cart/delete/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = {_id: new ObjectId(id)};
+
+    //   const result = await cart.deleteOne(query);
+
+    //   res.send(result)
+
+    //   console.log(id);
+    // })
+
+    app.get("/my-cart/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const cursor = await cart.findOne(query)
+
+      res.send(cursor)
+    })
+
+    app.delete("/my-cart/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+
+      const result = await cart.deleteOne(query);
+
+      res.send(result)
+    });
+
 
     // update single product
     app.put("/update/:id", async (req, res) => {
