@@ -39,11 +39,12 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     // db and collections
     const database = client.db("ZestoriaDB");
     const products = database.collection("products");
+    const cart = database.collection("cart");
 
     // post a product document
     app.post("/products", async (req, res) => {
@@ -53,6 +54,15 @@ async function run() {
 
       res.send(result)
       console.log(`A document was inserted with the _id: ${result.insertedId}`);
+    })
+
+    // post to cart
+    app.post("/cart-post", async (req, res) => {
+      const product = req.body;
+
+      const result = await cart.insertOne(product)
+
+      res.send(result)
     })
 
     // get brand filtered products
