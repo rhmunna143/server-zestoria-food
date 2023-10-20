@@ -97,6 +97,15 @@ async function run() {
       }
     })
 
+    // get all cart products
+    app.get("/my-cart", async(req, res) => {
+      const cursor = cart.find();
+
+      const result = await cursor.toArray();
+
+      res.send(result)
+    })
+
     // update single product
     app.put("/update/:id", async (req, res) => {
       const id = req.params.id;
