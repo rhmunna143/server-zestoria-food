@@ -98,8 +98,11 @@ async function run() {
     })
 
     // get all cart products
-    app.get("/my-cart", async (req, res) => {
-      const cursor = cart.find();
+    app.get("/cart/:id", async (req, res) => {
+      const id = req.params.id;
+      const userId = {uid: id}
+
+      const cursor = cart.find(userId);
 
       const result = await cursor.toArray();
 
